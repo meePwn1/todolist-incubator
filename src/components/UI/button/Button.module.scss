@@ -1,0 +1,22 @@
+.button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 700;
+	color: #4044c9;
+	background-color: #f2f2f2;
+	padding: 9px 15px;
+	border-radius: 16px;
+	height: 100%;
+	border: none;
+	cursor: pointer;
+	&:disabled {
+		background-color: gray;
+		color: #000;
+		cursor: no-drop;
+	}
+	&__active {
+		background-color: #4044c9;
+		color: #fff;
+	}
+}
