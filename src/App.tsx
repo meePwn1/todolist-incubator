@@ -11,12 +11,12 @@ type todolistsType = { id: string; title: string; filter: FilterValueType }
 function App(): JSX.Element {
 	const todolistIDs = [v1(), v1()]
 
-	let [todolists, setTodolists] = useState<Array<todolistsType>>([
+	const [todolists, setTodolists] = useState<Array<todolistsType>>([
 		{ id: todolistIDs[0], title: 'What to learn', filter: 'All' },
 		{ id: todolistIDs[1], title: 'What to buy', filter: 'All' },
 	])
 
-	let [tasks, setTasks] = useState({
+	const [tasks, setTasks] = useState({
 		[todolistIDs[0]]: [
 			{ id: v1(), title: 'HTML&CSS', isDone: true },
 			{ id: v1(), title: 'JS', isDone: true },
