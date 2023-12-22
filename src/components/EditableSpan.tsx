@@ -1,66 +1,29 @@
-import { ChangeEvent, FC, KeyboardEvent, useState } from 'react'
-import Input from './UI/input/Input'
+import { ChangeEvent, useState } from 'react'
 
-interface EditableSpanProps {
-	title: string
-	changeTitle: (title: string) => void
+type EditableSpanPropsType = {
+	value: string
+	onChange: (newValue: string) => void
 }
 
-const EditableSpan: FC<EditableSpanProps> = ({ title, changeTitle }) => {
-	const [editMode, setEditMode] = useState<boolean>(false)
-	const [inputValue, setInputValue] = useState<string>('')
-	const [error, setError] = useState<string>('')
+export function EditableSpan(props: EditableSpanPropsType) {
+	const [editMode, setEditMode] = useState(false)
+	const [title, setTitle] = useState(props.value)
 
-	const doubleClickHandler = () => {
+	const activateEditMode = () => {
 		setEditMode(true)
-		setInputValue(title)
+		setTitle(props.value)
 	}
-	const keyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter') {
-			blurHandler()
-		}
+	const activateViewMode = () => {
+		setEditMode(false)
+		props.onChange(title)
 	}
-	const blurHandler = () => {
-		if (inputValue.trim()) {
-			setEditMode(false)
-			changeTitle(inputValue)
-		} else {
-			setError('Title is required')
-		}
+	const changeTitle = (e: ChangeEvent<HTMLInputElement>) => {
+		setTitle(e.currentTarget.value)
 	}
-	const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-		setInputValue(e.target.value)
-		setError('')
-	}
+
 	return editMode ? (
-		<span style={{ position: 'relative' }}>
-			<Input
-				error={error}
-				onKeyDown={keyDownHandler}
-				value={inputValue}
-				onChange={changeHandler}
-				onBlur={blurHandler}
-				autoFocus
-			/>
-			{error && (
-				<span
-					style={{
-						position: 'absolute',
-						top: 8,
-						left: 15,
-						zIndex: 1,
-						color: 'red',
-						fontSize: 14,
-						pointerEvents: 'none',
-					}}
-				>
-					{error}
-				</span>
-			)}
-		</span>
+		<input value={title} onChange={changeTitle} autoFocus onBlur={activateViewMode} />
 	) : (
-		<span onDoubleClick={doubleClickHandler}>{title}</span>
+		<span onDoubleClick={activateEditMode}>{props.value}</span>
 	)
 }
-
-export default EditableSpan

@@ -1,19 +1,16 @@
-import { ChangeEvent, FC, KeyboardEvent, useState } from 'react'
-import Button from './UI/button/Button'
-import Input from './UI/input/Input'
+import { ChangeEvent, KeyboardEvent, useState } from 'react'
 
-interface AddItemFormProps {
-	placeholder: string
-	addItem: (value: string) => void
+type AddItemFormPropsType = {
+	addItem: (title: string) => void
 }
 
-const AddItemForm: FC<AddItemFormProps> = ({ addItem, placeholder }) => {
-	const [title, setTitle] = useState<string>('')
-	const [error, setError] = useState<string>('')
+export function AddItemForm(props: AddItemFormPropsType) {
+	const [title, setTitle] = useState('')
+	const [error, setError] = useState<string | null>(null)
 
-	const addItemHandler = () => {
+	const addItem = () => {
 		if (title.trim() !== '') {
-			addItem(title.trim())
+			props.addItem(title)
 			setTitle('')
 		} else {
 			setError('Title is required')
@@ -21,37 +18,22 @@ const AddItemForm: FC<AddItemFormProps> = ({ addItem, placeholder }) => {
 	}
 
 	const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-		if (!(e.target.value.length > 15)) {
-			setTitle(e.target.value)
-			setError('')
-		} else {
-			setError('max string length 15')
-		}
+		setTitle(e.currentTarget.value)
 	}
 
-	const keyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+	const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+		setError(null)
 		if (e.key === 'Enter') {
-			addItemHandler()
+			addItem()
 		}
 	}
 
 	return (
-		<div className='todolists-add'>
-			<div className='todolist__new-task'>
-				<Input
-					error={error}
-					onKeyDown={keyDownHandler}
-					value={title}
-					onChange={onChangeHandler}
-					placeholder={placeholder}
-				/>
-				<Button disabled={!title} onClick={addItemHandler}>
-					Add New
-				</Button>
-			</div>
-			{error && <div style={{ color: 'red' }}>{error}</div>}
+		<div>
+			<input value={title} onChange={onChangeHandler} onKeyDown={onKeyDownHandler} className={error ? 'error' : ''} />
+			<button onClick={addItem}>+</button>
+
+			{error && <div className='error-message'>{error}</div>}
 		</div>
 	)
 }
-
-export default AddItemForm
