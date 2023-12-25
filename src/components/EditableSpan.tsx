@@ -1,3 +1,4 @@
+import OutlinedInput from '@mui/material/OutlinedInput'
 import { ChangeEvent, useState } from 'react'
 
 type EditableSpanPropsType = {
@@ -22,7 +23,7 @@ export function EditableSpan(props: EditableSpanPropsType) {
 	}
 
 	return editMode ? (
-		<input value={title} onChange={changeTitle} autoFocus onBlur={activateViewMode} />
+		<OutlinedInput value={title} onChange={changeTitle} autoFocus onBlur={activateViewMode} size='small' />
 	) : (
 		<span onDoubleClick={activateEditMode}>{props.value}</span>
 	)

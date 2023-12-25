@@ -1,3 +1,10 @@
+import ClearIcon from '@mui/icons-material/Clear'
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import { ChangeEvent } from 'react'
 import { FilterValuesType } from '../App'
 import { AddItemForm } from './AddItemForm'
@@ -41,12 +48,22 @@ export function Todolist(props: PropsType) {
 
 	return (
 		<div>
-			<h3>
-				<EditableSpan value={props.title} onChange={changeTodolistTitle} />
-				<button onClick={removeTodolist}>x</button>
-			</h3>
+			<Stack gap={1} direction={'row'} alignItems={'center'} mb={2}>
+				<Typography variant='h3' fontSize={24} fontWeight={700}>
+					<EditableSpan value={props.title} onChange={changeTodolistTitle} />
+				</Typography>
+				<Button
+					onClick={removeTodolist}
+					variant='contained'
+					size='small'
+					sx={{ minWidth: '25px', maxHeight: '25px', p: '4px' }}
+				>
+					<ClearIcon fontSize='small' />
+				</Button>
+			</Stack>
 			<AddItemForm addItem={addTask} />
-			<ul>
+
+			<List dense={false}>
 				{props.tasks.map(t => {
 					const onClickHandler = () => props.removeTask(t.id, props.id)
 					const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,24 +75,47 @@ export function Todolist(props: PropsType) {
 					}
 
 					return (
-						<li key={t.id} className={t.isDone ? 'is-done' : ''}>
-							<input type='checkbox' onChange={onChangeHandler} checked={t.isDone} />
+						<ListItem key={t.id} className={t.isDone ? 'is-done' : ''} sx={{ p: 0, minHeight: 0, gap: 1 }}>
+							<Checkbox onChange={onChangeHandler} checked={t.isDone} sx={{ p: 0 }} />
 							<EditableSpan value={t.title} onChange={onTitleChangeHandler} />
-							<button onClick={onClickHandler}>x</button>
-						</li>
+							<Button
+								onClick={onClickHandler}
+								variant='contained'
+								size='small'
+								sx={{ minWidth: '25px', maxHeight: '25px' }}
+							>
+								x
+							</Button>
+						</ListItem>
 					)
 				})}
-			</ul>
+			</List>
+
 			<div>
-				<button className={props.filter === 'all' ? 'active-filter' : ''} onClick={onAllClickHandler}>
+				<Button
+					onClick={onAllClickHandler}
+					variant={props.filter === 'all' ? 'contained' : 'outlined'}
+					size='small'
+					sx={{ minWidth: '25px', maxHeight: '25px' }}
+				>
 					All
-				</button>
-				<button className={props.filter === 'active' ? 'active-filter' : ''} onClick={onActiveClickHandler}>
+				</Button>
+				<Button
+					onClick={onActiveClickHandler}
+					variant={props.filter === 'active' ? 'contained' : 'outlined'}
+					size='small'
+					sx={{ minWidth: '25px', maxHeight: '25px' }}
+				>
 					Active
-				</button>
-				<button className={props.filter === 'completed' ? 'active-filter' : ''} onClick={onCompletedClickHandler}>
+				</Button>
+				<Button
+					onClick={onCompletedClickHandler}
+					variant={props.filter === 'completed' ? 'contained' : 'outlined'}
+					size='small'
+					sx={{ minWidth: '25px', maxHeight: '25px' }}
+				>
 					Completed
-				</button>
+				</Button>
 			</div>
 		</div>
 	)
