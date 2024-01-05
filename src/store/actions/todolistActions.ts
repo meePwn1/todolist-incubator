@@ -7,8 +7,8 @@ export enum TodolistActionTypes {
 	CHANGE_TODOLIST_FILTER = 'CHANGE_TODOLIST_FILTER',
 }
 
-type AddTodolistAction = ReturnType<typeof addTodolist>
-type RemoveTodolistAction = ReturnType<typeof removeTodolist>
+export type AddTodolistAction = ReturnType<typeof addTodolist>
+export type RemoveTodolistAction = ReturnType<typeof removeTodolist>
 type CHANGE_TODOLIST_TITLE = ReturnType<typeof changeTodolistTitle>
 type CHANGE_TODOLIST_FILTER = ReturnType<typeof changeTodolistFilter>
 
@@ -18,10 +18,13 @@ export type TodolistActionCreator =
 	| CHANGE_TODOLIST_TITLE
 	| CHANGE_TODOLIST_FILTER
 
-export const addTodolist = (title: string) => {
+export const addTodolist = (id: string, title: string) => {
 	return {
 		type: TodolistActionTypes.ADD_TODOLIST,
-		payload: title,
+		payload: {
+			id,
+			title,
+		},
 	} as const
 }
 
