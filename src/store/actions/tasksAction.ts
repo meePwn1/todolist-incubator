@@ -84,7 +84,7 @@ export const changeStatusAction = (
 	}
 }
 
-export const changeTaskTitle = (
+export const changeTaskTitleAction = (
 	id: string,
 	newTitle: string,
 	todoId: string

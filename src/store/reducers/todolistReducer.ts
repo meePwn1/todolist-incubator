@@ -4,15 +4,17 @@ import {
 	TodolistActionTypes,
 } from '../actions/todolistActions'
 
+const initialState: TodolistType[] = []
+
 export const todolistReducer = (
-	state: TodolistType[],
+	state = initialState,
 	action: TodolistActionCreator
 ): TodolistType[] => {
 	switch (action.type) {
 		case TodolistActionTypes.ADD_TODOLIST:
 			return [
-				...state,
 				{ id: action.payload.id, title: action.payload.title, filter: 'all' },
+				...state,
 			]
 		case TodolistActionTypes.REMOVE_TODOLIST:
 			return state.filter(el => el.id !== action.payload)
@@ -29,6 +31,6 @@ export const todolistReducer = (
 					: el
 			)
 		default:
-			throw new Error('Incorrect type')
+			return state
 	}
 }

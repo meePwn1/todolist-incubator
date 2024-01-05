@@ -3,8 +3,10 @@ import { TasksStateType } from '../../App'
 import { TasksAction, TasksActionTypes } from '../actions/tasksAction'
 import { TodolistActionTypes } from '../actions/todolistActions'
 
+const initialState: TasksStateType = {}
+
 export const tasksReducer = (
-	state: TasksStateType,
+	state = initialState,
 	action: TasksAction
 ): TasksStateType => {
 	switch (action.type) {
@@ -43,8 +45,8 @@ export const tasksReducer = (
 			}
 		case TodolistActionTypes.ADD_TODOLIST:
 			return {
-				...state,
 				[action.payload.id]: [],
+				...state,
 			}
 		case TodolistActionTypes.REMOVE_TODOLIST: {
 			const newState = { ...state }
@@ -52,6 +54,6 @@ export const tasksReducer = (
 			return newState
 		}
 		default:
-			throw new Error('Incorrect type')
+			return state
 	}
 }
