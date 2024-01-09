@@ -7,36 +7,41 @@ export enum TasksActionTypes {
 	CHANGE_TASK_TITLE = 'CHANGE_TASK_TITLE',
 }
 
-interface RemoveTaskAction {
-	type: TasksActionTypes.REMOVE_TASK
-	payload: {
-		id: string
-		todoId: string
-	}
-}
-interface AddTaskAction {
-	type: TasksActionTypes.ADD_TASK
-	payload: {
-		title: string
-		todoId: string
-	}
-}
-interface ChangeStatusAction {
-	type: TasksActionTypes.CHANGE_STATUS
-	payload: {
-		id: string
-		isDone: boolean
-		todoId: string
-	}
-}
-interface ChangeTaskTitleAction {
-	type: TasksActionTypes.CHANGE_TASK_TITLE
-	payload: {
-		id: string
-		newTitle: string
-		todoId: string
-	}
-}
+// interface RemoveTaskAction {
+// 	type: TasksActionTypes.REMOVE_TASK
+// 	payload: {
+// 		id: string
+// 		todoId: string
+// 	}
+// }
+// interface AddTaskAction {
+// 	type: TasksActionTypes.ADD_TASK
+// 	payload: {
+// 		title: string
+// 		todoId: string
+// 	}
+// }
+// interface ChangeStatusAction {
+// 	type: TasksActionTypes.CHANGE_STATUS
+// 	payload: {
+// 		id: string
+// 		isDone: boolean
+// 		todoId: string
+// 	}
+// }
+// interface ChangeTaskTitleAction {
+// 	type: TasksActionTypes.CHANGE_TASK_TITLE
+// 	payload: {
+// 		id: string
+// 		newTitle: string
+// 		todoId: string
+// 	}
+// }
+
+type RemoveTaskAction = ReturnType<typeof removeTaskAction>
+type AddTaskAction = ReturnType<typeof addTaskAction>
+type ChangeStatusAction = ReturnType<typeof changeStatusAction>
+type ChangeTaskTitleAction = ReturnType<typeof changeTaskTitleAction>
 
 export type TasksAction =
 	| RemoveTaskAction
@@ -46,34 +51,31 @@ export type TasksAction =
 	| AddTodolistAction
 	| RemoveTodolistAction
 
-export const removeTaskAction = (
-	id: string,
-	todoId: string
-): RemoveTaskAction => {
+export const removeTaskAction = (id: string, todoId: string) => {
 	return {
 		type: TasksActionTypes.REMOVE_TASK,
 		payload: {
 			id,
 			todoId,
 		},
-	}
+	} as const
 }
 
-export const addTaskAction = (title: string, todoId: string): AddTaskAction => {
+export const addTaskAction = (title: string, todoId: string) => {
 	return {
 		type: TasksActionTypes.ADD_TASK,
 		payload: {
 			title,
 			todoId,
 		},
-	}
+	} as const
 }
 
 export const changeStatusAction = (
 	id: string,
 	isDone: boolean,
 	todoId: string
-): ChangeStatusAction => {
+) => {
 	return {
 		type: TasksActionTypes.CHANGE_STATUS,
 		payload: {
@@ -81,14 +83,14 @@ export const changeStatusAction = (
 			isDone,
 			todoId,
 		},
-	}
+	} as const
 }
 
 export const changeTaskTitleAction = (
 	id: string,
 	newTitle: string,
 	todoId: string
-): ChangeTaskTitleAction => {
+) => {
 	return {
 		type: TasksActionTypes.CHANGE_TASK_TITLE,
 		payload: {
@@ -96,5 +98,5 @@ export const changeTaskTitleAction = (
 			newTitle,
 			todoId,
 		},
-	}
+	} as const
 }

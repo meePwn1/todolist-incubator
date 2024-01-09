@@ -14,8 +14,18 @@ import { v1 } from 'uuid'
 import './App.css'
 import { AddItemForm } from './components/AddItemForm'
 import { TaskType, Todolist } from './components/Todolist'
-import { addTaskAction, changeStatusAction, changeTaskTitleAction, removeTaskAction } from './store/actions/tasksAction'
-import { addTodolistAction, changeTodolistFilterAction, changeTodolistTitleAction, removeTodolistAction } from './store/actions/todolistActions'
+import {
+	addTaskAction,
+	changeStatusAction,
+	changeTaskTitleAction,
+	removeTaskAction,
+} from './store/actions/tasksAction'
+import {
+	addTodolistAction,
+	changeTodolistFilterAction,
+	changeTodolistTitleAction,
+	removeTodolistAction,
+} from './store/actions/todolistActions'
 import { tasksReducer } from './store/reducers/taskReducer'
 import { todolistReducer } from './store/reducers/todolistReducer'
 
@@ -60,7 +70,6 @@ function App() {
 	}
 
 	function changeStatus(id: string, isDone: boolean, todolistId: string) {
-
 		dispatchTasks(changeStatusAction(id, isDone, todolistId))
 	}
 
@@ -81,9 +90,8 @@ function App() {
 		dispatchTodolists(changeTodolistTitleAction(id, title))
 	}
 
-	function addTodolist(title: string) {
+	const addTodolist = (title: string) => {
 		const newTodolistId = v1()
-
 		dispatchTodolists(addTodolistAction(newTodolistId, title))
 		dispatchTasks(addTodolistAction(newTodolistId, title))
 	}
