@@ -16,7 +16,7 @@
 		"predeploy": "npm run build",
 		"deploy": "gh-pages -d dist -r https://github.com/meePwn1/todolist-incubator.git",
 		"test": "jest",
-		"storybook": "storybook dev -p 6006",
+		"storybook": "storybook dev -p 9009",
 		"build-storybook": "storybook build",
 		"jest:integration": "jest -c integration/jest.config.js",
 		"test:integration": "start-server-and-test storybook http-get://localhost:6006 jest:integration"
@@ -47,6 +47,7 @@
 		"@typescript-eslint/eslint-plugin": "^6.14.0",
 		"@typescript-eslint/parser": "^6.14.0",
 		"@vitejs/plugin-react": "^4.2.1",
+		"axios": "^1.6.5",
 		"eslint": "^8.55.0",
 		"eslint-plugin-jest": "^27.6.3",
 		"eslint-plugin-react-hooks": "^4.6.0",
