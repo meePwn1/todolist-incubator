@@ -1,56 +1,44 @@
-import { v1 } from 'uuid'
-import { TasksStateType } from '../../App'
+import { IEntityTask } from '../../types/ITask'
 import { TasksAction, TasksActionTypes } from '../actions/tasksAction'
 import { TodolistActionTypes } from '../actions/todolistActions'
 
-const initialState: TasksStateType = {}
+const initialState: IEntityTask = {}
 
 export const tasksReducer = (
 	state = initialState,
 	action: TasksAction
-): TasksStateType => {
+): IEntityTask => {
 	switch (action.type) {
 		case TasksActionTypes.REMOVE_TASK:
 			return {
 				...state,
-				[action.payload.todoId]: state[action.payload.todoId].filter(
-					el => el.id !== action.payload.id
-				),
+				[action.todoId]: state[action.todoId].filter(el => el.id !== action.id),
 			}
 		case TasksActionTypes.ADD_TASK:
 			return {
 				...state,
-				[action.payload.todoId]: [
-					...state[action.payload.todoId],
-					{ id: v1(), isDone: false, title: action.payload.title },
+				[action.task.todoListId]: [
+					action.task,
+					...state[action.task.todoListId],
 				],
 			}
 		case TasksActionTypes.CHANGE_STATUS:
 			return {
 				...state,
-				[action.payload.todoId]: state[action.payload.todoId].map(el =>
-					el.id === action.payload.id
-						? { ...el, isDone: action.payload.isDone }
-						: el
+				[action.todoId]: state[action.todoId].map(el =>
+					el.id === action.id ? { ...el, status: action.status } : el
 				),
 			}
-		case TasksActionTypes.CHANGE_TASK_TITLE:
-			return {
-				...state,
-				[action.payload.todoId]: state[action.payload.todoId].map(el =>
-					el.id === action.payload.id
-						? { ...el, title: action.payload.newTitle }
-						: el
-				),
-			}
-		case TodolistActionTypes.ADD_TODOLIST:
-			return {
-				[action.payload.id]: [],
-				...state,
-			}
-		case TodolistActionTypes.REMOVE_TODOLIST: {
+		case TodolistActionTypes.REMOVE_TODOLIST:
+			return state
+		case TodolistActionTypes.SET_TODOLIST: {
 			const newState = { ...state }
-			delete newState[action.payload]
+			action.data.forEach(el => (newState[el.id] = []))
+			return newState
+		}
+		case TasksActionTypes.SET_TASK: {
+			const newState = { ...state }
+			newState[action.todoID] = action.data
 			return newState
 		}
 		default:

@@ -1,4 +1,4 @@
-import AppWithRedux from './AppWithRedux'
+import AppWithRedux from './App'
 import { ReduxStoreProviderDecorator } from './stories/AppDecoratorForStories'
 
 export default {

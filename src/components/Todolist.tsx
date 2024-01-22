@@ -3,8 +3,11 @@ import Button from '@mui/material/Button'
 import List from '@mui/material/List'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { memo, useCallback, useMemo } from 'react'
+import { memo, useCallback, useEffect, useMemo } from 'react'
 import { FilterValuesType } from '../App'
+import { useAppDispatch } from '../hooks/useAppDispatch'
+import { fetchTasks } from '../store/actions/tasksAction'
+import { TaskStatuses } from '../types/ITask'
 import { AddItemForm } from './AddItemForm'
 import { EditableSpan } from './EditableSpan'
 import TodoItem from './TodoItem'
@@ -22,7 +25,11 @@ type PropsType = {
 	removeTask: (taskId: string, todolistId: string) => void
 	changeFilter: (value: FilterValuesType, todolistId: string) => void
 	addTask: (title: string, todolistId: string) => void
-	changeTaskStatus: (id: string, isDone: boolean, todolistId: string) => void
+	changeTaskStatus: (
+		id: string,
+		status: TaskStatuses,
+		todolistId: string
+	) => void
 	removeTodolist: (id: string) => void
 	changeTodolistTitle: (id: string, newTitle: string) => void
 	filter: FilterValuesType
@@ -34,6 +41,12 @@ type PropsType = {
 }
 
 export const Todolist = memo((props: PropsType) => {
+	const dispatch = useAppDispatch()
+
+	useEffect(() => {
+		dispatch(fetchTasks(props.id))
+	}, [])
+
 	const addTask = useCallback(
 		(title: string) => {
 			props.addTask(title, props.id)

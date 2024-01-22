@@ -2,14 +2,18 @@ import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import ListItem from '@mui/material/ListItem'
 import { ChangeEvent, FC, memo, useCallback } from 'react'
+import { TaskStatuses } from '../types/ITask'
 import { EditableSpan } from './EditableSpan'
 import { TaskType } from './Todolist'
 
 interface TodoItemProps {
 	todoID: string
 	task: TaskType
-	removeTask: (taskID: string, todoID: string) => void
-	changeTaskStatus: (taskID: string, isDone: boolean, todoID: string) => void
+	changeTaskStatus: (
+		taskID: string,
+		status: TaskStatuses,
+		todoID: string
+	) => void
 	changeTaskTitle: (taskID: string, value: string, todoID: string) => void
 }
 
@@ -22,8 +26,10 @@ const TodoItem: FC<TodoItemProps> = memo(props => {
 	)
 	const onChangeHandler = useCallback(
 		(e: ChangeEvent<HTMLInputElement>) => {
-			const newIsDoneValue = e.currentTarget.checked
-			props.changeTaskStatus(props.task.id, newIsDoneValue, props.todoID)
+			const taskStatus = e.currentTarget.checked
+				? TaskStatuses.Completed
+				: TaskStatuses.New
+			props.changeTaskStatus(props.task.id, taskStatus, props.todoID)
 		},
 		[props.changeTaskStatus, props.task.id, props.todoID]
 	)
