@@ -2,54 +2,51 @@ import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import ListItem from '@mui/material/ListItem'
 import { ChangeEvent, FC, memo, useCallback } from 'react'
-import { TaskStatuses } from '../types/ITask'
+import { useAction } from '../hooks/useAction'
+import { ITask, TaskStatuses } from '../types/ITask'
 import { EditableSpan } from './EditableSpan'
-import { TaskType } from './Todolist'
 
 interface TodoItemProps {
 	todoID: string
-	task: TaskType
-	changeTaskStatus: (
-		taskID: string,
-		status: TaskStatuses,
-		todoID: string
-	) => void
-	changeTaskTitle: (taskID: string, value: string, todoID: string) => void
+	task: ITask
 }
 
-const TodoItem: FC<TodoItemProps> = memo(props => {
-	console.log('TodoItem called')
+const TodoItem: FC<TodoItemProps> = memo(({ task, todoID }) => {
+	const { removeTaskThunk, updateTaskThunk } = useAction()
 
 	const onClickHandler = useCallback(
-		() => props.removeTask(props.task.id, props.todoID),
-		[props.removeTask, props.task.id, props.todoID]
+		() => removeTaskThunk(todoID, task.id),
+		[todoID, task, removeTaskThunk]
 	)
 	const onChangeHandler = useCallback(
 		(e: ChangeEvent<HTMLInputElement>) => {
 			const taskStatus = e.currentTarget.checked
 				? TaskStatuses.Completed
 				: TaskStatuses.New
-			props.changeTaskStatus(props.task.id, taskStatus, props.todoID)
+			updateTaskThunk(todoID, task.id, {
+				status: taskStatus,
+				completed: e.currentTarget.checked,
+			})
 		},
-		[props.changeTaskStatus, props.task.id, props.todoID]
+		[todoID, task, updateTaskThunk]
 	)
 	const onTitleChangeHandler = useCallback(
 		(newValue: string) => {
-			props.changeTaskTitle(props.task.id, newValue, props.todoID)
+			updateTaskThunk(todoID, task.id, { title: newValue })
 		},
-		[props.changeTaskTitle, props.task.id, props.todoID]
+		[task, todoID, updateTaskThunk]
 	)
 	return (
 		<ListItem
-			className={props.task.isDone ? 'is-done' : ''}
+			className={task.completed ? 'is-done' : ''}
 			sx={{ p: 0, minHeight: 0, gap: 1 }}
 		>
 			<Checkbox
 				onChange={onChangeHandler}
-				checked={props.task.isDone}
+				checked={task.completed}
 				sx={{ p: 0 }}
 			/>
-			<EditableSpan value={props.task.title} onChange={onTitleChangeHandler} />
+			<EditableSpan value={task.title} onChange={onTitleChangeHandler} />
 			<Button
 				onClick={onClickHandler}
 				variant='contained'

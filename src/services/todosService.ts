@@ -17,8 +17,8 @@ export const todosService = {
 	async createTodo(title: { title: string }) {
 		return axiosTodos.post<IResponse<{ item: ITodo }>>(TODOS, title)
 	},
-	async updateTodo(title: string) {
-		return axiosTodos.put<IResponse<{ item: ITodo }>>(TODOS, title)
+	async updateTodo(id: string, title: { title: string }) {
+		return axiosTodos.put<IResponse<{ item: ITodo }>>(`${TODOS}/${id}`, title)
 	},
 	async deleteTodo(id: string) {
 		return axiosTodos.delete<IResponse>(`${TODOS}/${id}`)

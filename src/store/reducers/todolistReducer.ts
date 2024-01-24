@@ -1,5 +1,8 @@
-import { IEntityTodo } from '../../types/ITodo'
-import { TodolistAction, TodolistActionTypes } from '../actions/todolistActions'
+import {
+	IEntityTodo,
+	TodolistAction,
+	TodolistActionTypes,
+} from '../../types/ITodo'
 
 const initialState: IEntityTodo[] = []
 
@@ -9,7 +12,7 @@ export const todolistReducer = (
 ): IEntityTodo[] => {
 	switch (action.type) {
 		case TodolistActionTypes.ADD_TODOLIST:
-			return state
+			return [{ ...action.data, filter: 'all' }, ...state]
 		case TodolistActionTypes.REMOVE_TODOLIST:
 			return state.filter(el => el.id !== action.id)
 		case TodolistActionTypes.CHANGE_TODOLIST_TITLE:
@@ -20,9 +23,8 @@ export const todolistReducer = (
 			return state.map(el =>
 				el.id === action.id ? { ...el, filter: action.filter } : el
 			)
-		case TodolistActionTypes.SET_TODOLIST: {
+		case TodolistActionTypes.SET_TODOLIST:
 			return action.data.map(el => ({ ...el, filter: 'all' }))
-		}
 		default:
 			return state
 	}

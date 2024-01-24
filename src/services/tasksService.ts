@@ -14,7 +14,7 @@ interface IResponse<T = {}> {
 	resultCode: number
 }
 
-const TASKS = '/tasks'
+const TASKS = 'tasks'
 
 export const tasksService = {
 	async getTasks(todoID: string) {

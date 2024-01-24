@@ -3,96 +3,50 @@ import Button from '@mui/material/Button'
 import List from '@mui/material/List'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { memo, useCallback, useEffect, useMemo } from 'react'
-import { FilterValuesType } from '../App'
-import { useAppDispatch } from '../hooks/useAppDispatch'
-import { fetchTasks } from '../store/actions/tasksAction'
-import { TaskStatuses } from '../types/ITask'
+import { FC, memo, useEffect } from 'react'
+import { useAction } from '../hooks/useAction'
+import { useTasks } from '../hooks/useTasks'
+import { useTypedSelector } from '../hooks/useTypedSelector'
+import { IEntityTodo } from '../types/ITodo'
 import { AddItemForm } from './AddItemForm'
 import { EditableSpan } from './EditableSpan'
 import TodoItem from './TodoItem'
 
-export type TaskType = {
-	id: string
-	title: string
-	isDone: boolean
-}
-
 type PropsType = {
-	id: string
-	title: string
-	tasks: Array<TaskType>
-	removeTask: (taskId: string, todolistId: string) => void
-	changeFilter: (value: FilterValuesType, todolistId: string) => void
-	addTask: (title: string, todolistId: string) => void
-	changeTaskStatus: (
-		id: string,
-		status: TaskStatuses,
-		todolistId: string
-	) => void
-	removeTodolist: (id: string) => void
-	changeTodolistTitle: (id: string, newTitle: string) => void
-	filter: FilterValuesType
-	changeTaskTitle: (
-		taskId: string,
-		newTitle: string,
-		todolistId: string
-	) => void
+	todo: IEntityTodo
 }
 
-export const Todolist = memo((props: PropsType) => {
-	const dispatch = useAppDispatch()
+export const Todolist: FC<PropsType> = memo(({ todo }) => {
+	const tasks = useTypedSelector(state => state.tasks[todo.id])
+	const {
+		fetchTasks,
+		updateTitleTodoThunk,
+		removeTodoThunk,
+		addTaskThunk,
+		changeTodolistFilterAction,
+	} = useAction()
+
+	const filteredTasks = useTasks(tasks, todo.filter)
 
 	useEffect(() => {
-		dispatch(fetchTasks(props.id))
+		fetchTasks(todo.id)
 	}, [])
 
-	const addTask = useCallback(
-		(title: string) => {
-			props.addTask(title, props.id)
-		},
-		[props.addTask, props.id]
-	)
-
-	console.log('Todolist called')
-
-	const tasksForTodolist = useMemo(() => {
-		switch (props.filter) {
-			case 'active':
-				return props.tasks.filter(el => !el.isDone)
-			case 'completed':
-				return props.tasks.filter(el => el.isDone)
-			default:
-				return props.tasks
-		}
-	}, [props.tasks, props.filter])
-
 	const removeTodolist = () => {
-		props.removeTodolist(props.id)
+		removeTodoThunk(todo.id)
 	}
-	const changeTodolistTitle = useCallback(
-		(title: string) => props.changeTodolistTitle(props.id, title),
-		[props.changeTodolistTitle, props.id]
-	)
-
-	const onAllClickHandler = useCallback(
-		() => props.changeFilter('all', props.id),
-		[props.changeFilter, props.id]
-	)
-	const onActiveClickHandler = useCallback(
-		() => props.changeFilter('active', props.id),
-		[props.changeFilter, props.id]
-	)
-	const onCompletedClickHandler = useCallback(
-		() => props.changeFilter('completed', props.id),
-		[props.changeFilter, props.id]
-	)
+	const changeTodolistTitle = (title: string) => {
+		updateTitleTodoThunk(todo.id, title)
+	}
+	const addTask = (title: string) => {
+		addTaskThunk(todo.id, title)
+	}
 
 	return (
 		<div>
 			<Stack gap={1} direction={'row'} alignItems={'center'} mb={2}>
 				<Typography variant='h3' fontSize={24} fontWeight={700}>
-					<EditableSpan value={props.title} onChange={changeTodolistTitle} />
+					<EditableSpan value={todo.title} onChange={changeTodolistTitle} />
 				</Typography>
 				<Button
 					onClick={removeTodolist}
@@ -106,39 +60,30 @@ export const Todolist = memo((props: PropsType) => {
 			<AddItemForm addItem={addTask} />
 
 			<List dense={false}>
-				{tasksForTodolist.map(t => {
-					return (
-						<TodoItem
-							key={t.id}
-							task={t}
-							todoID={props.id}
-							removeTask={props.removeTask}
-							changeTaskStatus={props.changeTaskStatus}
-							changeTaskTitle={props.changeTaskTitle}
-						/>
-					)
+				{filteredTasks.map(t => {
+					return <TodoItem key={t.id} task={t} todoID={todo.id} />
 				})}
 			</List>
 			<div>
 				<Button
-					onClick={onAllClickHandler}
-					variant={props.filter === 'all' ? 'contained' : 'outlined'}
+					onClick={() => changeTodolistFilterAction(todo.id, 'all')}
+					variant={todo.filter === 'all' ? 'contained' : 'outlined'}
 					size='small'
 					sx={{ minWidth: '25px', maxHeight: '25px' }}
 				>
 					All
 				</Button>
 				<Button
-					onClick={onActiveClickHandler}
-					variant={props.filter === 'active' ? 'contained' : 'outlined'}
+					onClick={() => changeTodolistFilterAction(todo.id, 'active')}
+					variant={todo.filter === 'active' ? 'contained' : 'outlined'}
 					size='small'
 					sx={{ minWidth: '25px', maxHeight: '25px' }}
 				>
 					Active
 				</Button>
 				<Button
-					onClick={onCompletedClickHandler}
-					variant={props.filter === 'completed' ? 'contained' : 'outlined'}
+					onClick={() => changeTodolistFilterAction(todo.id, 'completed')}
+					variant={todo.filter === 'completed' ? 'contained' : 'outlined'}
 					size='small'
 					sx={{ minWidth: '25px', maxHeight: '25px' }}
 				>

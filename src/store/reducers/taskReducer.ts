@@ -1,6 +1,5 @@
-import { IEntityTask } from '../../types/ITask'
-import { TasksAction, TasksActionTypes } from '../actions/tasksAction'
-import { TodolistActionTypes } from '../actions/todolistActions'
+import { IEntityTask, TasksAction, TasksActionTypes } from '../../types/ITask'
+import { TodolistActionTypes } from '../../types/ITodo'
 
 const initialState: IEntityTask = {}
 
@@ -22,23 +21,25 @@ export const tasksReducer = (
 					...state[action.task.todoListId],
 				],
 			}
-		case TasksActionTypes.CHANGE_STATUS:
+		case TasksActionTypes.UPDATE_TASK:
 			return {
 				...state,
 				[action.todoId]: state[action.todoId].map(el =>
-					el.id === action.id ? { ...el, status: action.status } : el
+					el.id === action.id ? { ...el, ...action.model } : el
 				),
 			}
-		case TodolistActionTypes.REMOVE_TODOLIST:
-			return state
 		case TodolistActionTypes.SET_TODOLIST: {
 			const newState = { ...state }
 			action.data.forEach(el => (newState[el.id] = []))
 			return newState
 		}
-		case TasksActionTypes.SET_TASK: {
+		case TasksActionTypes.SET_TASK:
+			return { ...state, [action.todoID]: action.data }
+		case TodolistActionTypes.ADD_TODOLIST:
+			return { ...state, [action.data.id]: [] }
+		case TodolistActionTypes.REMOVE_TODOLIST: {
 			const newState = { ...state }
-			newState[action.todoID] = action.data
+			delete newState[action.id]
 			return newState
 		}
 		default:

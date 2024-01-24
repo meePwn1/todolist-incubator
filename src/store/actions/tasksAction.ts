@@ -1,57 +1,14 @@
 import { tasksService } from '../../services/tasksService'
-import { ITask, TaskStatuses, UpdateTaskModel } from '../../types/ITask'
-import { IThunk } from '../../types/IThunk'
 import {
-	AddTodolistAction,
-	RemoveTodolistAction,
-	SetTodolistAction,
-} from './todolistActions'
-
-export enum TasksActionTypes {
-	REMOVE_TASK = 'REMOVE_TASK',
-	ADD_TASK = 'ADD_TASK',
-	CHANGE_STATUS = 'CHANGE_STATUS',
-	CHANGE_TASK_TITLE = 'CHANGE_TASK_TITLE',
-	SET_TASK = 'SET_TASK',
-}
-
-interface RemoveTaskAction {
-	type: TasksActionTypes.REMOVE_TASK
-	id: string
-	todoId: string
-}
-interface AddTaskAction {
-	type: TasksActionTypes.ADD_TASK
-	task: ITask
-}
-interface ChangeStatusAction {
-	type: TasksActionTypes.CHANGE_STATUS
-	id: string
-	status: TaskStatuses
-	todoId: string
-}
-interface ChangeTaskTitleAction {
-	type: TasksActionTypes.CHANGE_TASK_TITLE
-	id: string
-	newTitle: string
-	todoId: string
-}
-
-interface SetTasksAction {
-	type: TasksActionTypes.SET_TASK
-	todoID: string
-	data: ITask[]
-}
-
-export type TasksAction =
-	| RemoveTaskAction
-	| AddTaskAction
-	| ChangeStatusAction
-	| ChangeTaskTitleAction
-	| AddTodolistAction
-	| RemoveTodolistAction
-	| SetTodolistAction
-	| SetTasksAction
+	AddTaskAction,
+	ITask,
+	RemoveTaskAction,
+	SetTasksAction,
+	TasksActionTypes,
+	UpdateTaskAction,
+	UpdateTaskModel,
+} from '../../types/ITask'
+import { IThunk } from '../../types/IThunk'
 
 export const removeTaskAction = (
 	id: string,
@@ -71,31 +28,19 @@ export const addTaskAction = (task: ITask): AddTaskAction => {
 	}
 }
 
-export const changeStatusAction = (
+export const updateTaskAction = (
+	todoId: string,
 	id: string,
-	status: TaskStatuses,
-	todoId: string
-): ChangeStatusAction => {
+	model: UpdateTaskModel
+): UpdateTaskAction => {
 	return {
-		type: TasksActionTypes.CHANGE_STATUS,
+		type: TasksActionTypes.UPDATE_TASK,
 		id,
-		status,
+		model,
 		todoId,
 	}
 }
 
-export const changeTaskTitleAction = (
-	id: string,
-	newTitle: string,
-	todoId: string
-): ChangeTaskTitleAction => {
-	return {
-		type: TasksActionTypes.CHANGE_TASK_TITLE,
-		id,
-		newTitle,
-		todoId,
-	}
-}
 export const setTasksAction = (
 	todoID: string,
 	data: ITask[]
@@ -119,7 +64,7 @@ export const removeTaskThunk =
 	dispatch =>
 		tasksService
 			.removeTask(todoID, taskID)
-			.then(res => dispatch(removeTaskAction(taskID, todoID)))
+			.then(() => dispatch(removeTaskAction(taskID, todoID)))
 
 export const addTaskThunk =
 	(todoID: string, title: string): IThunk =>
@@ -129,21 +74,25 @@ export const addTaskThunk =
 			.then(res => dispatch(addTaskAction(res.data.data.item)))
 
 export const updateTaskThunk =
-	(todoID: string, taskID: string, status: TaskStatuses): IThunk =>
+	(
+		todoID: string,
+		taskID: string,
+		updateFields: Partial<UpdateTaskModel>
+	): IThunk =>
 	(dispatch, getState) => {
 		const task = getState().tasks[todoID].find(el => el.id === taskID)
 		if (task) {
 			const model: UpdateTaskModel = {
 				title: task.title,
-				completed: task.completed,
 				deadline: task.deadline,
 				description: task.description,
 				priority: task.priority,
 				startDate: task.startDate,
-				status,
+				status: task.status,
+				...updateFields,
 			}
 			tasksService
 				.updateTask(todoID, taskID, model)
-				.then(res => dispatch(changeStatusAction(taskID, status, todoID)))
+				.then(() => dispatch(updateTaskAction(todoID, taskID, model)))
 		}
 	}
