@@ -1,15 +1,15 @@
-import { IEntityTask, ITask, UpdateTaskModel } from '../../types/ITask'
-import { ITodo } from '../../types/ITodo'
+import { IEntityTask, ITask, UpdateTaskModel } from '../../../types/ITask'
+import { ITodo } from '../../../types/ITodo'
 import {
 	addTaskAction,
 	removeTaskAction,
 	setTasksAction,
 	updateTaskAction,
-} from '../actions/tasksAction'
+} from '../../actions/tasksAction'
 import {
 	addTodolistAction,
 	setTodolistAction,
-} from '../actions/todolistActions'
+} from '../../actions/todolistActions'
 import { tasksReducer } from './taskReducer'
 
 let todolistId1: string

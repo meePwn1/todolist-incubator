@@ -1,14 +1,31 @@
 import { tasksService } from '../../services/tasksService'
+import { RequestStatusType } from '../../types/IApp'
 import {
 	AddTaskAction,
 	ITask,
 	RemoveTaskAction,
+	SetTaskStatusAction,
 	SetTasksAction,
 	TasksActionTypes,
 	UpdateTaskAction,
 	UpdateTaskModel,
 } from '../../types/ITask'
 import { IThunk } from '../../types/IThunk'
+import { appErrorHandler, serverErrorHandler } from '../../utils/errorHandler'
+import { setAppErrorAction, setAppStatusAction } from './appActions'
+
+export const setTaskStatusAction = (
+	todoID: string,
+	taskID: string,
+	status: RequestStatusType
+): SetTaskStatusAction => {
+	return {
+		type: TasksActionTypes.SET_STATUS,
+		todoID,
+		taskID,
+		status,
+	}
+}
 
 export const removeTaskAction = (
 	id: string,
@@ -54,24 +71,54 @@ export const setTasksAction = (
 
 export const fetchTasks =
 	(todoID: string): IThunk =>
-	dispatch =>
+	dispatch => {
+		dispatch(setAppStatusAction('loading'))
 		tasksService
 			.getTasks(todoID)
-			.then(res => dispatch(setTasksAction(todoID, res.data.items)))
+			.then(res => {
+				if (!res.data.error) {
+					dispatch(setTasksAction(todoID, res.data.items))
+					dispatch(setAppStatusAction('succeeded'))
+				} else {
+					dispatch(setAppStatusAction('failed'))
+					dispatch(setAppErrorAction(res.data.error))
+				}
+			})
+			.catch(err => {
+				serverErrorHandler(err, dispatch)
+			})
+	}
 
 export const removeTaskThunk =
 	(todoID: string, taskID: string): IThunk =>
-	dispatch =>
+	dispatch => {
+		dispatch(setTaskStatusAction(todoID, taskID, 'loading'))
 		tasksService
 			.removeTask(todoID, taskID)
-			.then(() => dispatch(removeTaskAction(taskID, todoID)))
+			.then(() => {
+				dispatch(removeTaskAction(taskID, todoID))
+			})
+			.catch(err => serverErrorHandler(err, dispatch))
+	}
 
 export const addTaskThunk =
 	(todoID: string, title: string): IThunk =>
-	dispatch =>
+	dispatch => {
+		dispatch(setAppStatusAction('loading'))
 		tasksService
 			.createTask(todoID, { title })
-			.then(res => dispatch(addTaskAction(res.data.data.item)))
+			.then(res => {
+				if (!res.data.resultCode) {
+					dispatch(addTaskAction(res.data.data.item))
+					dispatch(setAppStatusAction('succeeded'))
+				} else {
+					appErrorHandler(res.data, dispatch)
+				}
+			})
+			.catch(err => {
+				serverErrorHandler(err, dispatch)
+			})
+	}
 
 export const updateTaskThunk =
 	(
@@ -91,8 +138,21 @@ export const updateTaskThunk =
 				status: task.status,
 				...updateFields,
 			}
+			dispatch(setAppStatusAction('loading'))
+			dispatch(setTaskStatusAction(todoID, taskID, 'loading'))
 			tasksService
 				.updateTask(todoID, taskID, model)
-				.then(() => dispatch(updateTaskAction(todoID, taskID, model)))
+				.then(res => {
+					if (!res.data.resultCode) {
+						dispatch(updateTaskAction(todoID, taskID, model))
+						dispatch(setAppStatusAction('succeeded'))
+						dispatch(setTaskStatusAction(todoID, taskID, 'succeeded'))
+					} else {
+						appErrorHandler(res.data, dispatch)
+					}
+				})
+				.catch(err => {
+					serverErrorHandler(err, dispatch)
+				})
 		}
 	}

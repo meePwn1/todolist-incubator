@@ -1,12 +1,13 @@
 import { v1 } from 'uuid'
-import { FilterValuesType, IEntityTodo, ITodo } from '../../types/ITodo'
+import { FilterValuesType, IEntityTodo, ITodo } from '../../../types/ITodo'
 import {
 	addTodolistAction,
 	changeTodolistFilterAction,
 	changeTodolistTitleAction,
 	removeTodolistAction,
+	setEntityStatusTodolistAction,
 	setTodolistAction,
-} from '../actions/todolistActions'
+} from '../../actions/todolistActions'
 import { todolistReducer } from './todolistReducer'
 
 let todolistId1: string
@@ -23,6 +24,7 @@ beforeEach(() => {
 			addedDate: '2024-01-23T03:37:17.22',
 			order: -9,
 			filter: 'all',
+			entityStatus: 'idle',
 		},
 		{
 			id: todolistId2,
@@ -30,11 +32,20 @@ beforeEach(() => {
 			addedDate: '2024-01-23T03:36:17.667',
 			order: -8,
 			filter: 'all',
+			entityStatus: 'idle',
 		},
 	]
 })
 
 describe('Todolist reducer', () => {
+	test('correct change entity status', () => {
+		const endState = todolistReducer(
+			startState,
+			setEntityStatusTodolistAction(todolistId1, 'loading')
+		)
+		expect(endState[0].entityStatus).toBe('loading')
+		expect(endState.length).toBe(2)
+	})
 	test('correct todolist should be added', () => {
 		const todolistId3 = v1()
 		const newTitle = 'qweqweqw'

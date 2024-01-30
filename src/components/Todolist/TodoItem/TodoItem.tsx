@@ -2,9 +2,9 @@ import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import ListItem from '@mui/material/ListItem'
 import { ChangeEvent, FC, memo, useCallback } from 'react'
-import { useAction } from '../hooks/useAction'
-import { ITask, TaskStatuses } from '../types/ITask'
-import { EditableSpan } from './EditableSpan'
+import { useAction } from '../../../hooks/useAction'
+import { ITask, TaskStatuses } from '../../../types/ITask'
+import { EditableSpan } from '../../EditableSpan/EditableSpan'
 
 interface TodoItemProps {
 	todoID: string

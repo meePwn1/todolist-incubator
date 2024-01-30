@@ -1,4 +1,5 @@
 import { todosService } from '../../services/todosService'
+import { RequestStatusType } from '../../types/IApp'
 import { IThunk } from '../../types/IThunk'
 import {
 	AddTodolistAction,
@@ -7,14 +8,28 @@ import {
 	FilterValuesType,
 	ITodo,
 	RemoveTodolistAction,
+	SetEntityStatusTodolistAction,
 	SetTodolistAction,
 	TodolistActionTypes,
 } from '../../types/ITodo'
+import { appErrorHandler, serverErrorHandler } from '../../utils/errorHandler'
+import { setAppStatusAction } from './appActions'
 
 export const addTodolistAction = (data: ITodo): AddTodolistAction => {
 	return {
 		type: TodolistActionTypes.ADD_TODOLIST,
 		data,
+	}
+}
+
+export const setEntityStatusTodolistAction = (
+	id: string,
+	status: RequestStatusType
+): SetEntityStatusTodolistAction => {
+	return {
+		type: TodolistActionTypes.SET_ENTITY_STATUS_TODOLIST,
+		status,
+		id,
 	}
 }
 
@@ -54,26 +69,57 @@ export const setTodolistAction = (data: ITodo[]): SetTodolistAction => {
 	}
 }
 
-export const fetchTodolist = (): IThunk => async dispatch => {
-	const { data } = await todosService.getTodos()
-	dispatch(setTodolistAction(data))
+export const fetchTodolist = (): IThunk => dispatch => {
+	dispatch(setAppStatusAction('loading'))
+	todosService
+		.getTodos()
+		.then(res => {
+			dispatch(setTodolistAction(res.data))
+			dispatch(setAppStatusAction('succeeded'))
+		})
+		.catch(err => serverErrorHandler(err, dispatch))
 }
 
 export const addTodoThunk =
 	(title: string): IThunk =>
-	dispatch =>
+	dispatch => {
+		setAppStatusAction('loading')
 		todosService
 			.createTodo({ title })
-			.then(res => dispatch(addTodolistAction(res.data.data.item)))
+			.then(res => {
+				if (!res.data.resultCode) {
+					dispatch(addTodolistAction(res.data.data.item))
+					dispatch(setAppStatusAction('succeeded'))
+				} else {
+					appErrorHandler(res.data, dispatch)
+				}
+			})
+			.catch(err => serverErrorHandler(err, dispatch))
+	}
 
 export const updateTitleTodoThunk =
 	(id: string, title: string): IThunk =>
-	dispatch =>
+	dispatch => {
 		todosService
 			.updateTodo(id, { title })
-			.then(() => dispatch(changeTodolistTitleAction(id, title)))
+			.then(res => {
+				if (!res.data.resultCode) {
+					dispatch(changeTodolistTitleAction(id, title))
+				} else {
+					appErrorHandler(res.data, dispatch)
+				}
+			})
+			.catch(err => serverErrorHandler(err, dispatch))
+	}
 
 export const removeTodoThunk =
 	(id: string): IThunk =>
-	dispatch =>
-		todosService.deleteTodo(id).then(() => dispatch(removeTodolistAction(id)))
+	dispatch => {
+		dispatch(setEntityStatusTodolistAction(id, 'loading'))
+		todosService
+			.deleteTodo(id)
+			.then(() => {
+				dispatch(removeTodolistAction(id))
+			})
+			.catch(err => serverErrorHandler(err, dispatch))
+	}

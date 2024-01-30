@@ -1,5 +1,9 @@
-import { IEntityTask, TasksAction, TasksActionTypes } from '../../types/ITask'
-import { TodolistActionTypes } from '../../types/ITodo'
+import {
+	IEntityTask,
+	TasksAction,
+	TasksActionTypes,
+} from '../../../types/ITask'
+import { TodolistActionTypes } from '../../../types/ITodo'
 
 const initialState: IEntityTask = {}
 
@@ -34,7 +38,13 @@ export const tasksReducer = (
 			return newState
 		}
 		case TasksActionTypes.SET_TASK:
-			return { ...state, [action.todoID]: action.data }
+			return {
+				...state,
+				[action.todoID]: action.data.map(el => ({
+					...el,
+					entityStatus: 'idle',
+				})),
+			}
 		case TodolistActionTypes.ADD_TODOLIST:
 			return { ...state, [action.data.id]: [] }
 		case TodolistActionTypes.REMOVE_TODOLIST: {
@@ -42,6 +52,13 @@ export const tasksReducer = (
 			delete newState[action.id]
 			return newState
 		}
+		case TasksActionTypes.SET_STATUS:
+			return {
+				...state,
+				[action.todoID]: state[action.todoID].map(el =>
+					el.id === action.taskID ? { ...el, entityStatus: action.status } : el
+				),
+			}
 		default:
 			return state
 	}

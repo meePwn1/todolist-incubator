@@ -4,6 +4,7 @@ import { ChangeEvent, memo, useState } from 'react'
 type EditableSpanPropsType = {
 	value: string
 	onChange: (newValue: string) => void
+	disabled?: boolean
 }
 
 export const EditableSpan = memo((props: EditableSpanPropsType) => {
@@ -13,8 +14,10 @@ export const EditableSpan = memo((props: EditableSpanPropsType) => {
 	console.log('EditableSpan called')
 
 	const activateEditMode = () => {
-		setEditMode(true)
-		setTitle(props.value)
+		if (!props.disabled) {
+			setEditMode(true)
+			setTitle(props.value)
+		}
 	}
 	const activateViewMode = () => {
 		setEditMode(false)

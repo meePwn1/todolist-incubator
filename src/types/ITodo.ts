@@ -1,9 +1,18 @@
+import { RequestStatusType } from './IApp'
+
 export enum TodolistActionTypes {
 	ADD_TODOLIST = 'ADD_TODOLIST',
 	REMOVE_TODOLIST = 'REMOVE_TODOLIST',
 	CHANGE_TODOLIST_TITLE = 'CHANGE_TODOLIST_TITLE',
 	CHANGE_TODOLIST_FILTER = 'CHANGE_TODOLIST_FILTER',
 	SET_TODOLIST = 'SET_TODOLIST',
+	SET_ENTITY_STATUS_TODOLIST = 'SET_ENTITY_STATUS_TODOLIST',
+}
+
+export interface SetEntityStatusTodolistAction {
+	type: TodolistActionTypes.SET_ENTITY_STATUS_TODOLIST
+	status: RequestStatusType
+	id: string
 }
 
 export interface AddTodolistAction {
@@ -38,6 +47,7 @@ export type TodolistAction =
 	| ChangeTodolistTitleAction
 	| ChangeTodolistFilterAction
 	| SetTodolistAction
+	| SetEntityStatusTodolistAction
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
 
@@ -50,4 +60,5 @@ export interface ITodo {
 
 export interface IEntityTodo extends ITodo {
 	filter: FilterValuesType
+	entityStatus: RequestStatusType
 }

@@ -1,3 +1,4 @@
+import { RequestStatusType } from './IApp'
 import {
 	AddTodolistAction,
 	RemoveTodolistAction,
@@ -9,6 +10,7 @@ export enum TasksActionTypes {
 	ADD_TASK = 'ADD_TASK',
 	UPDATE_TASK = 'UPDATE_TASK',
 	SET_TASK = 'SET_TASK',
+	SET_STATUS = 'SET_STATUS',
 }
 
 export interface RemoveTaskAction {
@@ -32,6 +34,12 @@ export interface SetTasksAction {
 	todoID: string
 	data: ITask[]
 }
+export interface SetTaskStatusAction {
+	type: TasksActionTypes.SET_STATUS
+	todoID: string
+	taskID: string
+	status: RequestStatusType
+}
 
 export type TasksAction =
 	| RemoveTaskAction
@@ -41,6 +49,7 @@ export type TasksAction =
 	| RemoveTodolistAction
 	| SetTodolistAction
 	| SetTasksAction
+	| SetTaskStatusAction
 
 export enum TaskStatuses {
 	New = 0,
@@ -70,6 +79,7 @@ export interface ITask extends UpdateTaskModel {
 	todoListId: string
 	addedDate: string
 	order: number
+	entityStatus: RequestStatusType
 }
 
 export interface IEntityTask {

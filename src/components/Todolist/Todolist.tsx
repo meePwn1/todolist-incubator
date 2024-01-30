@@ -4,13 +4,13 @@ import List from '@mui/material/List'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { FC, memo, useEffect } from 'react'
-import { useAction } from '../hooks/useAction'
-import { useTasks } from '../hooks/useTasks'
-import { useTypedSelector } from '../hooks/useTypedSelector'
-import { IEntityTodo } from '../types/ITodo'
-import { AddItemForm } from './AddItemForm'
-import { EditableSpan } from './EditableSpan'
-import TodoItem from './TodoItem'
+import { useAction } from '../../hooks/useAction'
+import { useTasks } from '../../hooks/useTasks'
+import { useTypedSelector } from '../../hooks/useTypedSelector'
+import { IEntityTodo } from '../../types/ITodo'
+import { AddItemForm } from '../AddItemForm/AddItemForm'
+import { EditableSpan } from '../EditableSpan/EditableSpan'
+import TodoItem from './TodoItem/TodoItem'
 
 type PropsType = {
 	todo: IEntityTodo
@@ -46,18 +46,26 @@ export const Todolist: FC<PropsType> = memo(({ todo }) => {
 		<div>
 			<Stack gap={1} direction={'row'} alignItems={'center'} mb={2}>
 				<Typography variant='h3' fontSize={24} fontWeight={700}>
-					<EditableSpan value={todo.title} onChange={changeTodolistTitle} />
+					<EditableSpan
+						value={todo.title}
+						onChange={changeTodolistTitle}
+						disabled={todo.entityStatus === 'loading'}
+					/>
 				</Typography>
 				<Button
 					onClick={removeTodolist}
 					variant='contained'
 					size='small'
 					sx={{ minWidth: '25px', maxHeight: '25px', p: '4px' }}
+					disabled={todo.entityStatus === 'loading'}
 				>
 					<ClearIcon fontSize='small' />
 				</Button>
 			</Stack>
-			<AddItemForm addItem={addTask} />
+			<AddItemForm
+				addItem={addTask}
+				disabled={todo.entityStatus === 'loading'}
+			/>
 
 			<List dense={false}>
 				{filteredTasks.map(t => {
