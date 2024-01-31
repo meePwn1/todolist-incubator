@@ -7,8 +7,11 @@ import {
 	Typography,
 } from '@mui/material'
 import AppBar from '@mui/material/AppBar/AppBar'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { Login } from '../Pages/Login'
 import TodolistPage from '../Pages/TodolistPage'
 import LinearIndeterminate from '../components/LinearIndeterminate/LinearIndeterminate'
+import ErrorSnackbar from '../components/Snackbar/ErrorSnackbar'
 import { useTypedSelector } from '../hooks/useTypedSelector'
 
 export const App = () => {
@@ -26,8 +29,20 @@ export const App = () => {
 			</AppBar>
 			{status === 'loading' && <LinearIndeterminate />}
 			<Container fixed>
-				<TodolistPage />
+				<Routes>
+					<Route path='todolist-incubator/' element={<TodolistPage />} />
+					<Route path='todolist-incubator/login' element={<Login />} />
+					<Route
+						path='todolist-incubator/404'
+						element={<h1>404: Page not found</h1>}
+					/>
+					<Route
+						path='*'
+						element={<Navigate to={'todolist-incubator/404'} />}
+					/>
+				</Routes>
 			</Container>
+			<ErrorSnackbar />
 		</>
 	)
 }

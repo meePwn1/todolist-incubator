@@ -1,4 +1,4 @@
-import { axiosTasks } from '../api/api'
+import { axiosTasks } from '../api/todoAPI'
 import { ITask, UpdateTaskModel } from '../types/ITask'
 
 interface IGetResponse {

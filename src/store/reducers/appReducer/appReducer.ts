@@ -1,7 +1,7 @@
 import { AppAction, AppActionTypes, IApp } from '../../../types/IApp'
 
 const initialState: IApp = {
-	status: 'loading',
+	status: 'idle',
 	error: null,
 }
 

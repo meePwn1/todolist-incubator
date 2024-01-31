@@ -47,6 +47,7 @@ beforeEach(() => {
 				startDate: null,
 				deadline: null,
 				addedDate: '2024-01-23T19:40:04.523',
+				entityStatus: 'idle',
 			},
 			{
 				id: '2',
@@ -58,6 +59,7 @@ beforeEach(() => {
 				priority: 1,
 				startDate: null,
 				deadline: null,
+				entityStatus: 'idle',
 				addedDate: '2024-01-23T19:40:01.417',
 			},
 		],
@@ -73,6 +75,7 @@ beforeEach(() => {
 				startDate: null,
 				deadline: null,
 				addedDate: '2024-01-23T19:54:09.433',
+				entityStatus: 'idle',
 			},
 			{
 				id: '2',
@@ -85,6 +88,7 @@ beforeEach(() => {
 				startDate: null,
 				deadline: null,
 				addedDate: '2024-01-23T19:54:06.403',
+				entityStatus: 'idle',
 			},
 		],
 	}
@@ -110,6 +114,7 @@ test('correct task should be added to correct array', () => {
 		startDate: null,
 		deadline: null,
 		addedDate: '2024-01-23T19:40:01.417',
+		entityStatus: 'idle',
 	}
 	const action = addTaskAction(task)
 
@@ -154,6 +159,7 @@ test('tasks array setted to todolistID', () => {
 			startDate: null,
 			deadline: null,
 			addedDate: '2024-01-23T19:54:06.403',
+			entityStatus: 'idle',
 		},
 	]
 	const action = setTasksAction(todolistId1, tasks)

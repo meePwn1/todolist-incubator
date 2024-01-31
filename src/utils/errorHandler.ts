@@ -4,11 +4,11 @@ import {
 	setAppStatusAction,
 } from '../store/actions/appActions'
 import { AppAction } from '../types/IApp'
-interface IResponse<T = {}> {
-	data: T
-	fieldsErrors: []
+interface IResponse<T = Record<string, string | number>> {
+	data?: T
+	fieldsErrors?: []
 	messages: string[]
-	resultCode: number
+	resultCode?: number
 }
 
 export const appErrorHandler = <T>(

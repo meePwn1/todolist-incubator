@@ -1,4 +1,4 @@
-import { axiosTodos } from '../api/api'
+import { axiosTodos } from '../api/todoAPI'
 import { ITodo } from '../types/ITodo'
 
 interface IResponse<T = {}> {

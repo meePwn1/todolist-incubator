@@ -1,5 +1,6 @@
 import { Grid, Paper } from '@mui/material'
 import { useEffect } from 'react'
+import { Navigate } from 'react-router-dom'
 import { AddItemForm } from '../components/AddItemForm/AddItemForm'
 import { Todolist } from '../components/Todolist/Todolist'
 import { useAction } from '../hooks/useAction'
@@ -7,11 +8,19 @@ import { useTypedSelector } from '../hooks/useTypedSelector'
 
 const TodolistPage = () => {
 	const todos = useTypedSelector(state => state.todos)
+	const isLoggin = useTypedSelector(state => state.auth.isLoggedIn)
 	const { fetchTodolist, addTodoThunk } = useAction()
 
 	useEffect(() => {
+		if (!isLoggin) {
+			return
+		}
 		fetchTodolist()
 	}, [])
+
+	if (!isLoggin) {
+		return <Navigate to={'todolist-incubator/login'} />
+	}
 
 	return (
 		<div className='todolist'>
