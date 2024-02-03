@@ -3,13 +3,13 @@ import Button from '@mui/material/Button'
 import List from '@mui/material/List'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { FC, memo, useEffect } from 'react'
-import { useAction } from '../../hooks/useAction'
-import { useTasks } from '../../hooks/useTasks'
-import { useTypedSelector } from '../../hooks/useTypedSelector'
-import { IEntityTodo } from '../../types/ITodo'
-import { AddItemForm } from '../AddItemForm/AddItemForm'
-import { EditableSpan } from '../EditableSpan/EditableSpan'
+import { AddItemForm } from 'components/AddItemForm/AddItemForm'
+import { EditableSpan } from 'components/EditableSpan/EditableSpan'
+import { useAction } from 'hooks/useAction'
+import { useTasks } from 'hooks/useTasks'
+import { useTypedSelector } from 'hooks/useTypedSelector'
+import { FC, memo } from 'react'
+import { IEntityTodo } from 'types/ITodo'
 import TodoItem from './TodoItem/TodoItem'
 
 type PropsType = {
@@ -19,7 +19,6 @@ type PropsType = {
 export const Todolist: FC<PropsType> = memo(({ todo }) => {
 	const tasks = useTypedSelector(state => state.tasks[todo.id])
 	const {
-		fetchTasks,
 		updateTitleTodoThunk,
 		removeTodoThunk,
 		addTaskThunk,
@@ -27,10 +26,6 @@ export const Todolist: FC<PropsType> = memo(({ todo }) => {
 	} = useAction()
 
 	const filteredTasks = useTasks(tasks, todo.filter)
-
-	useEffect(() => {
-		fetchTasks(todo.id)
-	}, [])
 
 	const removeTodolist = () => {
 		removeTodoThunk(todo.id)

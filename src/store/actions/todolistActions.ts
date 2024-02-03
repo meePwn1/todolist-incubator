@@ -14,6 +14,7 @@ import {
 } from '../../types/ITodo'
 import { appErrorHandler, serverErrorHandler } from '../../utils/errorHandler'
 import { setAppStatusAction } from './appActions'
+import { fetchTasks } from './tasksAction'
 
 export const addTodolistAction = (data: ITodo): AddTodolistAction => {
 	return {
@@ -76,7 +77,9 @@ export const fetchTodolist = (): IThunk => dispatch => {
 		.then(res => {
 			dispatch(setTodolistAction(res.data))
 			dispatch(setAppStatusAction('succeeded'))
+			return res.data
 		})
+		.then(data => data.forEach(el => dispatch(fetchTasks(el.id))))
 		.catch(err => serverErrorHandler(err, dispatch))
 }
 

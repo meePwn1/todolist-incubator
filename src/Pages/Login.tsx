@@ -17,6 +17,7 @@ interface FormikErrorType {
 
 export const Login = () => {
 	const { loginThunk } = useAction()
+
 	const formik = useFormik({
 		initialValues: {
 			email: '',
