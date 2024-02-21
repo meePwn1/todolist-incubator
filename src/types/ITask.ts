@@ -1,56 +1,3 @@
-import { RequestStatusType } from './IApp'
-import {
-	AddTodolistAction,
-	RemoveTodolistAction,
-	SetTodolistAction,
-} from './ITodo'
-
-export enum TasksActionTypes {
-	REMOVE_TASK = 'REMOVE_TASK',
-	ADD_TASK = 'ADD_TASK',
-	UPDATE_TASK = 'UPDATE_TASK',
-	SET_TASK = 'SET_TASK',
-	SET_STATUS = 'SET_STATUS',
-}
-
-export interface RemoveTaskAction {
-	type: TasksActionTypes.REMOVE_TASK
-	id: string
-	todoId: string
-}
-export interface AddTaskAction {
-	type: TasksActionTypes.ADD_TASK
-	task: ITask
-}
-export interface UpdateTaskAction {
-	type: TasksActionTypes.UPDATE_TASK
-	id: string
-	model: UpdateTaskModel
-	todoId: string
-}
-
-export interface SetTasksAction {
-	type: TasksActionTypes.SET_TASK
-	todoID: string
-	data: ITask[]
-}
-export interface SetTaskStatusAction {
-	type: TasksActionTypes.SET_STATUS
-	todoID: string
-	taskID: string
-	status: RequestStatusType
-}
-
-export type TasksAction =
-	| RemoveTaskAction
-	| AddTaskAction
-	| UpdateTaskAction
-	| AddTodolistAction
-	| RemoveTodolistAction
-	| SetTodolistAction
-	| SetTasksAction
-	| SetTaskStatusAction
-
 export enum TaskStatuses {
 	New = 0,
 	NewProgress = 1,
@@ -79,9 +26,6 @@ export interface ITask extends UpdateTaskModel {
 	todoListId: string
 	addedDate: string
 	order: number
-	entityStatus: RequestStatusType
 }
 
-export interface IEntityTask {
-	[key: string]: ITask[]
-}
+export type ITaskState = Record<string, ITask[]>

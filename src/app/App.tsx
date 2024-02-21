@@ -1,26 +1,21 @@
 import { Menu } from '@mui/icons-material'
-import {
-	Button,
-	Container,
-	IconButton,
-	Toolbar,
-	Typography,
-} from '@mui/material'
+import { Button, Container, IconButton, Toolbar, Typography } from '@mui/material'
 import AppBar from '@mui/material/AppBar/AppBar'
-import { MouseEvent } from 'react'
+import { useActions } from 'hooks/useActions'
+import { selectAppStatus } from 'store/slices/appSlice'
+import { authThunks, selectAuthIsLoggedIn } from 'store/slices/authSlice'
 import AppRouter from '../components/AppRouter/AppRouter'
 import LinearIndeterminate from '../components/LinearIndeterminate/LinearIndeterminate'
 import ErrorSnackbar from '../components/Snackbar/ErrorSnackbar'
-import { useAction } from '../hooks/useAction'
 import { useTypedSelector } from '../hooks/useTypedSelector'
 
 export const App = () => {
-	const status = useTypedSelector(state => state.app.status)
-	const isLoggedIn = useTypedSelector(state => state.auth.isLoggedIn)
-	const { logOutThunk } = useAction()
-	const clickHandler = (e: MouseEvent<HTMLButtonElement>) => {
+	const status = useTypedSelector(selectAppStatus)
+	const isLoggedIn = useTypedSelector(selectAuthIsLoggedIn)
+	const { logout } = useActions(authThunks)
+	const logOutHandler = () => {
 		if (isLoggedIn) {
-			logOutThunk()
+			logout()
 		}
 	}
 	return (
@@ -31,7 +26,7 @@ export const App = () => {
 						<Menu />
 					</IconButton>
 					<Typography variant='h6'>News</Typography>
-					<Button color='inherit' onClick={clickHandler}>
+					<Button color='inherit' onClick={logOutHandler}>
 						{isLoggedIn ? 'LogOut' : 'Login'}
 					</Button>
 				</Toolbar>

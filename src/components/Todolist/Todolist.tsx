@@ -5,10 +5,12 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { AddItemForm } from 'components/AddItemForm/AddItemForm'
 import { EditableSpan } from 'components/EditableSpan/EditableSpan'
-import { useAction } from 'hooks/useAction'
+import { useActions } from 'hooks/useActions'
 import { useTasks } from 'hooks/useTasks'
 import { useTypedSelector } from 'hooks/useTypedSelector'
 import { FC, memo } from 'react'
+import { tasksThunks } from 'store/slices/tasksSlice'
+import { todolistsActions, todolistsThunks } from 'store/slices/todolistsSlice'
 import { IEntityTodo } from 'types/ITodo'
 import TodoItem from './TodoItem/TodoItem'
 
@@ -18,12 +20,9 @@ type PropsType = {
 
 export const Todolist: FC<PropsType> = memo(({ todo }) => {
 	const tasks = useTypedSelector(state => state.tasks[todo.id])
-	const {
-		updateTitleTodoThunk,
-		removeTodoThunk,
-		addTaskThunk,
-		changeTodolistFilterAction,
-	} = useAction()
+	const { updateTitleTodoThunk, removeTodoThunk } = useActions(todolistsThunks)
+	const { addTaskThunk } = useActions(tasksThunks)
+	const { changeTodolistFilter } = useActions(todolistsActions)
 
 	const filteredTasks = useTasks(tasks, todo.filter)
 
@@ -41,11 +40,7 @@ export const Todolist: FC<PropsType> = memo(({ todo }) => {
 		<div>
 			<Stack gap={1} direction={'row'} alignItems={'center'} mb={2}>
 				<Typography variant='h3' fontSize={24} fontWeight={700}>
-					<EditableSpan
-						value={todo.title}
-						onChange={changeTodolistTitle}
-						disabled={todo.entityStatus === 'loading'}
-					/>
+					<EditableSpan value={todo.title} onChange={changeTodolistTitle} disabled={todo.entityStatus === 'loading'} />
 				</Typography>
 				<Button
 					onClick={removeTodolist}
@@ -57,10 +52,7 @@ export const Todolist: FC<PropsType> = memo(({ todo }) => {
 					<ClearIcon fontSize='small' />
 				</Button>
 			</Stack>
-			<AddItemForm
-				addItem={addTask}
-				disabled={todo.entityStatus === 'loading'}
-			/>
+			<AddItemForm addItem={addTask} disabled={todo.entityStatus === 'loading'} />
 
 			<List dense={false}>
 				{filteredTasks.map(t => {
@@ -69,7 +61,7 @@ export const Todolist: FC<PropsType> = memo(({ todo }) => {
 			</List>
 			<div>
 				<Button
-					onClick={() => changeTodolistFilterAction(todo.id, 'all')}
+					onClick={() => changeTodolistFilter({ id: todo.id, filter: 'all' })}
 					variant={todo.filter === 'all' ? 'contained' : 'outlined'}
 					size='small'
 					sx={{ minWidth: '25px', maxHeight: '25px' }}
@@ -77,7 +69,7 @@ export const Todolist: FC<PropsType> = memo(({ todo }) => {
 					All
 				</Button>
 				<Button
-					onClick={() => changeTodolistFilterAction(todo.id, 'active')}
+					onClick={() => changeTodolistFilter({ id: todo.id, filter: 'active' })}
 					variant={todo.filter === 'active' ? 'contained' : 'outlined'}
 					size='small'
 					sx={{ minWidth: '25px', maxHeight: '25px' }}
@@ -85,7 +77,7 @@ export const Todolist: FC<PropsType> = memo(({ todo }) => {
 					Active
 				</Button>
 				<Button
-					onClick={() => changeTodolistFilterAction(todo.id, 'completed')}
+					onClick={() => changeTodolistFilter({ id: todo.id, filter: 'completed' })}
 					variant={todo.filter === 'completed' ? 'contained' : 'outlined'}
 					size='small'
 					sx={{ minWidth: '25px', maxHeight: '25px' }}

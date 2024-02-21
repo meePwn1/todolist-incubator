@@ -1,13 +1,14 @@
 import { Grid, Paper } from '@mui/material'
+import { Todolist } from 'components/Todolist/Todolist'
+import { useActions } from 'hooks/useActions'
+import { useTypedSelector } from 'hooks/useTypedSelector'
 import { useEffect } from 'react'
+import { todolistsThunks } from 'store/slices/todolistsSlice'
 import { AddItemForm } from '../components/AddItemForm/AddItemForm'
-import { Todolist } from '../components/Todolist/Todolist'
-import { useAction } from '../hooks/useAction'
-import { useTypedSelector } from '../hooks/useTypedSelector'
 
 const TodolistPage = () => {
 	const todos = useTypedSelector(state => state.todos)
-	const { fetchTodolist, addTodoThunk } = useAction()
+	const { fetchTodolist, addTodoThunk } = useActions(todolistsThunks)
 
 	useEffect(() => {
 		fetchTodolist()
