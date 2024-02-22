@@ -1,11 +1,11 @@
 import Alert from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
-import { useActions } from 'hooks/useActions'
-import { useTypedSelector } from 'hooks/useTypedSelector'
-import { appActions } from 'store/slices/appSlice'
+import { appActions, selectAppError } from 'app/appSlice'
+import { useActions } from 'common/hooks/useActions'
+import { useTypedSelector } from 'common/hooks/useTypedSelector'
 
 export default function ErrorSnackbar() {
-	const { error } = useTypedSelector(state => state.app)
+	const error = useTypedSelector(selectAppError)
 	const { setAppError } = useActions(appActions)
 	const handleClose = (_event: React.SyntheticEvent | Event, reason?: string) => {
 		if (reason === 'clickaway') {

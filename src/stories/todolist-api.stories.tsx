@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { tasksService } from '../services/tasksService'
-import { todosService } from '../services/todosService'
-import { UpdateTaskModel } from '../types/ITask'
+import { UpdateTaskModel } from '../common/types/ITask'
+import { tasksService } from '../features/TodolistsList/tasksService'
+import { todosService } from '../features/TodolistsList/todosService'
 
 export default {
 	title: 'API',
@@ -23,9 +23,7 @@ export const CreateTodos = () => {
 	const [state, setState] = useState<any>(null)
 
 	useEffect(() => {
-		todosService
-			.createTodo({ title: 'what to learn' })
-			.then(res => setState(res.data.data.item))
+		todosService.createTodo({ title: 'what to learn' }).then(res => setState(res.data.data.item))
 	}, [])
 	return <div>{JSON.stringify(state)}</div>
 }
@@ -76,9 +74,7 @@ export const updateTask = () => {
 		const todoID = '436e20d6-5473-476e-a0ba-3c1872db93fd'
 		const taskID = 'e598c437-9037-4ade-aaa6-efc3038b4268'
 		const data: UpdateTaskModel = {}
-		tasksService
-			.updateTask(todoID, taskID, data)
-			.then(res => setState(res.data))
+		tasksService.updateTask(todoID, taskID, data).then(res => setState(res.data))
 	}, [])
 	return <div>{JSON.stringify(state)}</div>
 }

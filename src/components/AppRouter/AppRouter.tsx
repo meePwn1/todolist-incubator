@@ -1,11 +1,11 @@
 import { CircularProgress } from '@mui/material'
-import { useActions } from 'hooks/useActions'
-import { useTypedSelector } from 'hooks/useTypedSelector'
+import { selectAppInitialized } from 'app/appSlice'
+import { useActions } from 'common/hooks/useActions'
+import { useTypedSelector } from 'common/hooks/useTypedSelector'
+import { privateRoutes, publicRoutes } from 'common/router/routes'
+import { authThunks } from 'features/auth/model/authSlice'
 import { useEffect } from 'react'
 import { Route, Routes } from 'react-router'
-import { privateRoutes, publicRoutes } from 'router/routes'
-import { selectAppInitialized } from 'store/slices/appSlice'
-import { authThunks } from 'store/slices/authSlice'
 
 const AppRouter = () => {
 	const { isLoggedIn } = useTypedSelector(state => state.auth)
