@@ -1,4 +1,4 @@
-import { appActions } from 'app/appSlice'
+import { appActions } from 'app/app-slice'
 import { Dispatch } from 'redux'
 
 interface IResponse<T = Record<string, string | number>> {

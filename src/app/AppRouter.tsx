@@ -1,19 +1,21 @@
 import { CircularProgress } from '@mui/material'
-import { selectAppInitialized } from 'app/appSlice'
+import { selectAppInitialized } from 'app/app-slice'
 import { useActions } from 'common/hooks/useActions'
-import { useTypedSelector } from 'common/hooks/useTypedSelector'
 import { privateRoutes, publicRoutes } from 'common/router/routes'
-import { authThunks } from 'features/auth/model/authSlice'
+import { authSelectors, authThunks } from 'features/auth/model/authSlice'
 import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { Route, Routes } from 'react-router'
 
 const AppRouter = () => {
-	const { isLoggedIn } = useTypedSelector(state => state.auth)
-	const isInitialized = useTypedSelector(selectAppInitialized)
+	const isLoggedIn = useSelector(authSelectors.selectAuthIsLoggedIn)
+	const isInitialized = useSelector(selectAppInitialized)
 	const { authMe } = useActions(authThunks)
+
 	useEffect(() => {
 		authMe()
 	}, [])
+
 	if (!isInitialized) {
 		return (
 			<div

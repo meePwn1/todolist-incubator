@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { ITask } from '../types/ITask'
-import { FilterValuesType } from '../types/ITodo'
+import { ITask } from '../../../common/types/ITask'
+import { FilterValuesType } from '../../../common/types/ITodo'
 
 export const useTasks = (tasks: ITask[], filter: FilterValuesType) => {
 	const filteredTasks = useMemo(() => {

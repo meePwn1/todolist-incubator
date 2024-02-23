@@ -1,6 +1,4 @@
-import NotFound from '../../components/NotFound/NotFound'
-import TodolistPage from '../../features/TodolistsList/TodolistPage'
-import { Login } from '../../features/auth/ui/login/Login'
+import { LoginPage, NotFound, TodolistPage } from 'pages'
 
 interface IRoute {
 	path: string
@@ -16,6 +14,6 @@ export const publicRoutes: IRoute[] = [
 ]
 
 export const privateRoutes: IRoute[] = [
-	{ path: `${BASE_URL}/login`, element: Login, caseSensitive: true },
-	{ path: '*', element: Login },
+	{ path: `${BASE_URL}/login`, element: LoginPage, caseSensitive: true },
+	{ path: '*', element: NotFound },
 ]

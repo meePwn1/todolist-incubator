@@ -7,7 +7,7 @@ interface IGetResponse {
 	totalCount: number
 }
 
-interface IResponse<T = {}> {
+interface IResponse<T = Record<string, never>> {
 	data: T
 	fieldsErrors: []
 	messages: string[]

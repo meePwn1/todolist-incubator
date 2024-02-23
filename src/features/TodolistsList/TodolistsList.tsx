@@ -1,18 +1,19 @@
 import { Grid, Paper } from '@mui/material'
 import { useActions } from 'common/hooks/useActions'
 import { useTypedSelector } from 'common/hooks/useTypedSelector'
-import { todolistsThunks } from 'features/TodolistsList/todolistsSlice'
+import { todolistsThunks } from 'features/TodolistsList/model/todolistsSlice'
 import { useEffect } from 'react'
 import { AddItemForm } from '../../common/components/AddItemForm/AddItemForm'
 import { Todolist } from './Todolist/Todolist'
-import { tasksThunks } from './tasksSlice'
+import { tasksThunks } from './model/tasksSlice'
 
-const TodolistPage = () => {
+export const TodolistsList = () => {
 	const todos = useTypedSelector(state => state.todos)
 	const { fetchTodolist, addTodoThunk } = useActions(todolistsThunks)
 	const { fetchTasks } = useActions(tasksThunks)
 
 	useEffect(() => {
+		console.log('2')
 		fetchTodolist()
 			.unwrap()
 			.then(res => res.todolists.forEach(el => fetchTasks(el.id)))
@@ -37,5 +38,3 @@ const TodolistPage = () => {
 		</div>
 	)
 }
-
-export default TodolistPage

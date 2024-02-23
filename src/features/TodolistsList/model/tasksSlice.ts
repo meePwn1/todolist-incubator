@@ -11,9 +11,9 @@ import { ITodo } from 'common/types/ITodo'
 import { appErrorHandler } from 'common/utils/app-error-handler'
 import { createAppAsyncThunk } from 'common/utils/create-app-async-thunk'
 import { serverErrorHandler } from 'common/utils/server-error-handler'
-import { tasksService } from 'features/TodolistsList/tasksService'
-import { appActions } from '../../app/appSlice'
-import { todolistsThunks } from './todolistsSlice'
+import { tasksService } from 'features/TodolistsList/api/tasksService'
+import { appActions } from '../../../app/app-slice'
+import { todolistsActions, todolistsThunks } from './todolistsSlice'
 
 const fetchTasks = createAppAsyncThunk<{ tasks: ITask[]; todoID: string }, string>(
 	'tasks/fetchTasks',
@@ -132,6 +132,9 @@ const slice = createSlice({
 			})
 			.addCase(todolistsThunks.fetchTodolist.fulfilled, (state, action) => {
 				action.payload.todolists.forEach((el: ITodo) => (state[el.id] = []))
+			})
+			.addCase(todolistsActions.clearState, () => {
+				return {}
 			})
 	},
 })

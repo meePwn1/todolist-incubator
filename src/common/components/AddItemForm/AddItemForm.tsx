@@ -11,8 +11,6 @@ export const AddItemForm = memo((props: AddItemFormPropsType) => {
 	const [title, setTitle] = useState('')
 	const [error, setError] = useState<string | null>(null)
 
-	console.log('AddItemForm called')
-
 	const addItem = () => {
 		if (title.trim() !== '') {
 			props.addItem(title)

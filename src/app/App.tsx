@@ -1,23 +1,26 @@
 import { Menu } from '@mui/icons-material'
 import { Button, Container, IconButton, Toolbar, Typography } from '@mui/material'
 import AppBar from '@mui/material/AppBar/AppBar'
-import { selectAppStatus } from 'app/appSlice'
-import LinearIndeterminate from 'common/components/LinearIndeterminate/LinearIndeterminate'
+import AppRouter from 'app/AppRouter'
+import { selectAppStatus } from 'app/app-slice'
+import { ErrorSnackbar, LinearIndeterminate } from 'common/components'
 import { useActions } from 'common/hooks/useActions'
-import { useTypedSelector } from 'common/hooks/useTypedSelector'
-import AppRouter from 'components/AppRouter/AppRouter'
-import ErrorSnackbar from 'components/Snackbar/ErrorSnackbar'
 import { authSelectors, authThunks } from 'features/auth/model/authSlice'
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 export const App = () => {
-	const status = useTypedSelector(selectAppStatus)
-	const isLoggedIn = useTypedSelector(authSelectors.selectAuthIsLoggedIn)
+	const status = useSelector(selectAppStatus)
+	const isLoggedIn = useSelector(authSelectors.selectAuthIsLoggedIn)
 	const { logout } = useActions(authThunks)
 	const logOutHandler = () => {
 		if (isLoggedIn) {
 			logout()
 		}
 	}
+	useEffect(() => {
+		console.log(1)
+	}, [])
 	return (
 		<>
 			<AppBar position='static'>

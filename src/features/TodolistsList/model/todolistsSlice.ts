@@ -1,12 +1,12 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { appActions } from 'app/appSlice'
+import { appActions } from 'app/app-slice'
 import { ResultCode } from 'common/enums'
 import { RequestStatusType } from 'common/types/IApp'
 import { FilterValuesType, IEntityTodo, ITodo, UpdateTitleArgType } from 'common/types/ITodo'
 import { appErrorHandler } from 'common/utils/app-error-handler'
 import { createAppAsyncThunk } from 'common/utils/create-app-async-thunk'
 import { serverErrorHandler } from 'common/utils/server-error-handler'
-import { todosService } from 'features/TodolistsList/todosService'
+import { todosService } from 'features/TodolistsList/api/todosService'
 
 const fetchTodolist = createAppAsyncThunk<{ todolists: ITodo[] }>('todo/fetchTodo', async (_, thunkAPI) => {
 	const { dispatch, rejectWithValue } = thunkAPI
@@ -96,6 +96,12 @@ const slice = createSlice({
 				todolist.filter = action.payload.filter
 			}
 		},
+		clearState() {
+			return []
+		},
+	},
+	selectors: {
+		selectTodos: state => state,
 	},
 	extraReducers: builder => {
 		builder
@@ -120,5 +126,6 @@ const slice = createSlice({
 })
 
 export const todolistsActions = slice.actions
+export const todolistsSelectors = slice.selectors
 export const todolistsThunks = { addTodoThunk, fetchTodolist, removeTodoThunk, updateTitleTodoThunk }
 export const todolistsReducer = slice.reducer

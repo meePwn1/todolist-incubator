@@ -11,8 +11,6 @@ export const EditableSpan = memo((props: EditableSpanPropsType) => {
 	const [editMode, setEditMode] = useState(false)
 	const [title, setTitle] = useState(props.value)
 
-	console.log('EditableSpan called')
-
 	const activateEditMode = () => {
 		if (!props.disabled) {
 			setEditMode(true)
@@ -28,13 +26,7 @@ export const EditableSpan = memo((props: EditableSpanPropsType) => {
 	}
 
 	return editMode ? (
-		<OutlinedInput
-			value={title}
-			onChange={changeTitle}
-			autoFocus
-			onBlur={activateViewMode}
-			size='small'
-		/>
+		<OutlinedInput value={title} onChange={changeTitle} autoFocus onBlur={activateViewMode} size='small' />
 	) : (
 		<span onDoubleClick={activateEditMode}>{props.value}</span>
 	)

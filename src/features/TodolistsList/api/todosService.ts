@@ -1,7 +1,7 @@
 import { instance } from 'common/api/common.api'
-import { ITodo } from '../../common/types/ITodo'
+import { ITodo } from '../../../common/types/ITodo'
 
-interface IResponse<T = {}> {
+interface IResponse<T = Record<string, never>> {
 	data: T
 	fieldsErrors: []
 	messages: string[]

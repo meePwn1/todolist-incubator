@@ -6,12 +6,12 @@ import Typography from '@mui/material/Typography'
 import { AddItemForm } from 'common/components/AddItemForm/AddItemForm'
 import { EditableSpan } from 'common/components/EditableSpan/EditableSpan'
 import { useActions } from 'common/hooks/useActions'
-import { useTasks } from 'common/hooks/useTasks'
 import { useTypedSelector } from 'common/hooks/useTypedSelector'
 import { IEntityTodo } from 'common/types/ITodo'
-import { tasksThunks } from 'features/TodolistsList/tasksSlice'
-import { todolistsActions, todolistsThunks } from 'features/TodolistsList/todolistsSlice'
-import { FC, memo } from 'react'
+import { useTasks } from 'features/TodolistsList/hooks/useTasks'
+import { tasksThunks } from 'features/TodolistsList/model/tasksSlice'
+import { todolistsActions, todolistsThunks } from 'features/TodolistsList/model/todolistsSlice'
+import { FC, memo, useEffect } from 'react'
 import TodoItem from './TodoItem/TodoItem'
 
 type PropsType = {
@@ -35,6 +35,9 @@ export const Todolist: FC<PropsType> = memo(({ todo }) => {
 	const addTask = (title: string) => {
 		addTaskThunk({ todoID: todo.id, title })
 	}
+	useEffect(() => {
+		console.log(3)
+	}, [])
 
 	return (
 		<div>

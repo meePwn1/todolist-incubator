@@ -5,7 +5,7 @@ import { EditableSpan } from 'common/components/EditableSpan/EditableSpan'
 import { TaskStatuses } from 'common/enums'
 import { useActions } from 'common/hooks/useActions'
 import { ITask } from 'common/types/ITask'
-import { tasksThunks } from 'features/TodolistsList/tasksSlice'
+import { tasksThunks } from 'features/TodolistsList/model/tasksSlice'
 import { ChangeEvent, FC, memo, useCallback } from 'react'
 
 interface TodoItemProps {

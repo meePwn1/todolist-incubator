@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from 'react'
 import { ActionCreatorsMapObject, bindActionCreators } from 'redux'
 import { useAppDispatch } from './useAppDispatch'
@@ -11,7 +12,7 @@ export const useActions = <T extends ActionCreatorsMapObject>(actions: T) => {
 // Types
 type IsValidArg<T> = T extends object ? (keyof T extends never ? false : true) : true
 type ActionCreatorResponse<T extends (...args: any[]) => any> = ReturnType<ReturnType<T>>
-type ReplaceReturnType<T, TNewReturn> = T extends (...args: any[]) => infer R
+type ReplaceReturnType<T, TNewReturn> = T extends (...args: any[]) => unknown
 	? IsValidArg<Extract<T, (...args: any[]) => any>> extends true
 		? (...args: Parameters<Extract<T, (...args: any[]) => any>>) => TNewReturn
 		: () => TNewReturn

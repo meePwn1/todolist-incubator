@@ -3,8 +3,9 @@ import { AuthRequestPayload } from 'common/types/IAuth'
 import { appErrorHandler } from 'common/utils/app-error-handler'
 import { createAppAsyncThunk } from 'common/utils/create-app-async-thunk'
 import { serverErrorHandler } from 'common/utils/server-error-handler'
+import { todolistsActions } from 'features/TodolistsList/model/todolistsSlice'
 import { authService } from 'features/auth/api/authService'
-import { appActions } from '../../../app/appSlice'
+import { appActions } from '../../../app/app-slice'
 
 const login = createAppAsyncThunk<unknown, AuthRequestPayload>('auth/login', async (arg, thunkAPI) => {
 	const { dispatch, rejectWithValue } = thunkAPI
@@ -51,6 +52,7 @@ const logout = createAppAsyncThunk('auth/logout', async (_, thunkAPI) => {
 		if (!res.data.resultCode) {
 			dispatch(appActions.setAppStatus({ status: 'succeeded' }))
 			dispatch(slice.actions.setIsLoggedIn({ isLoggedIn: false }))
+			dispatch(todolistsActions.clearState())
 		} else {
 			appErrorHandler(res.data, dispatch)
 			return rejectWithValue(null)
