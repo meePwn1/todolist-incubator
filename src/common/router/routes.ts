@@ -15,5 +15,5 @@ export const publicRoutes: IRoute[] = [
 
 export const privateRoutes: IRoute[] = [
 	{ path: `${BASE_URL}/login`, element: LoginPage, caseSensitive: true },
-	{ path: '*', element: NotFound },
+	{ path: '*', element: LoginPage },
 ]

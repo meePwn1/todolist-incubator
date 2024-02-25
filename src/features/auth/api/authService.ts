@@ -1,14 +1,8 @@
 import { instance } from 'common/api/common.api'
-import { AuthRequestPayload } from 'common/types/IAuth'
-
-interface IResponse<T = Record<string, never>> {
-	resultCode: number
-	messages: string[]
-	data: T
-}
+import { AuthRequestPayload, BaseResponseType } from 'common/types'
 
 interface IUserData {
-	userId: number
+	userId?: number
 }
 
 interface IUserDataWithId {
@@ -16,15 +10,16 @@ interface IUserDataWithId {
 	email: string
 	login: string
 }
+
 const AUTH = '/auth'
 export const authService = {
 	login(data: AuthRequestPayload) {
-		return instance.post<IResponse<IUserData>>(`${AUTH}/login`, data)
+		return instance.post<BaseResponseType<IUserData>>(`${AUTH}/login`, data)
 	},
 	me() {
-		return instance.get<IResponse<IUserDataWithId>>(`${AUTH}/me`)
+		return instance.get<BaseResponseType<IUserDataWithId>>(`${AUTH}/me`)
 	},
 	logOut() {
-		return instance.delete<IResponse>(`${AUTH}/login`)
+		return instance.delete<BaseResponseType>(`${AUTH}/login`)
 	},
 }

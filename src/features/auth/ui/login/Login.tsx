@@ -6,15 +6,10 @@ import FormGroup from '@mui/material/FormGroup'
 import FormLabel from '@mui/material/FormLabel'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
+import { useActions } from 'common/hooks/useActions'
+import { BaseResponseType } from 'common/types'
 import { authThunks } from 'features/auth/model/authSlice'
 import { useFormik } from 'formik'
-import { useActions } from '../../../../common/hooks/useActions'
-
-interface FormikErrorType {
-	email?: string
-	password?: string
-	rememberMe?: boolean
-}
 
 export const Login = () => {
 	const { login } = useActions(authThunks)
@@ -25,24 +20,15 @@ export const Login = () => {
 			password: '',
 			rememberMe: false,
 		},
-		onSubmit: values => {
-			alert(JSON.stringify(values))
+		onSubmit: (values, actions) => {
 			formik.resetForm()
 			login(values)
-		},
-		validate: values => {
-			const errors: FormikErrorType = {}
-			if (!values.email) {
-				errors.email = 'Required'
-			} else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-				errors.email = 'Invalid email address'
-			}
-			if (!values.password) {
-				errors.password = 'Required'
-			} else if (values.password.length < 3) {
-				errors.password = 'Password must be more than 3 chars'
-			}
-			return errors
+				.unwrap()
+				.catch((error: BaseResponseType) => {
+					error.fieldsErrors.forEach(fieldError => {
+						actions.setFieldError(fieldError.field, fieldError.error)
+					})
+				})
 		},
 	})
 
@@ -65,13 +51,9 @@ export const Login = () => {
 						</FormLabel>
 						<FormGroup>
 							<TextField label='Email' margin='normal' {...formik.getFieldProps('email')} />
-							{formik.touched.email && formik.errors.email ? (
-								<div style={{ color: 'red' }}>{formik.errors.email}</div>
-							) : null}
+							{formik.errors.email ? <div style={{ color: 'red' }}>{formik.errors.email}</div> : null}
 							<TextField type='password' label='Password' margin='normal' {...formik.getFieldProps('password')} />
-							{formik.touched.password && formik.errors.password ? (
-								<div style={{ color: 'red' }}>{formik.errors.password}</div>
-							) : null}
+							{formik.errors.password ? <div style={{ color: 'red' }}>{formik.errors.password}</div> : null}
 							<FormControlLabel label={'Remember me'} control={<Checkbox {...formik.getFieldProps('rememberMe')} />} />
 							<Button type={'submit'} variant={'contained'} color={'primary'}>
 								Login
