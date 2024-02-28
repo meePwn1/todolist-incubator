@@ -1,13 +1,13 @@
 import OutlinedInput from '@mui/material/OutlinedInput'
 import { ChangeEvent, memo, useState } from 'react'
 
-type EditableSpanPropsType = {
+type Props = {
 	value: string
 	onChange: (newValue: string) => void
 	disabled?: boolean
 }
 
-export const EditableSpan = memo((props: EditableSpanPropsType) => {
+export const EditableSpan = memo((props: Props) => {
 	const [editMode, setEditMode] = useState(false)
 	const [title, setTitle] = useState(props.value)
 

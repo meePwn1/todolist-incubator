@@ -6,31 +6,10 @@ import FormGroup from '@mui/material/FormGroup'
 import FormLabel from '@mui/material/FormLabel'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
-import { useActions } from 'common/hooks/useActions'
-import { BaseResponseType } from 'common/types'
-import { authThunks } from 'features/auth/model/authSlice'
-import { useFormik } from 'formik'
+import { useLogin } from 'features/auth/hooks/useLogin'
 
 export const Login = () => {
-	const { login } = useActions(authThunks)
-
-	const formik = useFormik({
-		initialValues: {
-			email: '',
-			password: '',
-			rememberMe: false,
-		},
-		onSubmit: (values, actions) => {
-			formik.resetForm()
-			login(values)
-				.unwrap()
-				.catch((error: BaseResponseType) => {
-					error.fieldsErrors.forEach(fieldError => {
-						actions.setFieldError(fieldError.field, fieldError.error)
-					})
-				})
-		},
-	})
+	const { formik } = useLogin()
 
 	return (
 		<Grid container justifyContent={'center'}>

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { IApp, RequestStatusType } from 'common/types/IApp'
+import { IApp, RequestStatusType } from 'common/types'
 
 const initialState: IApp = {
 	status: 'idle',

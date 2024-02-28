@@ -19,8 +19,8 @@ const addTodoThunk = createAppAsyncThunk<{ todolist: ITodo }, string>('todo/addT
 		if (res.data.resultCode === ResultCode.Success) {
 			return { todolist: res.data.data.item }
 		} else {
-			appErrorHandler(res.data, dispatch)
-			return rejectWithValue(null)
+			appErrorHandler(res.data, dispatch, false)
+			return rejectWithValue(res.data)
 		}
 	})
 })

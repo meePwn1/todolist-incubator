@@ -6,7 +6,6 @@ import { selectAppStatus } from 'app/app-slice'
 import { ErrorSnackbar, LinearIndeterminate } from 'common/components'
 import { useActions } from 'common/hooks/useActions'
 import { authSelectors, authThunks } from 'features/auth/model/authSlice'
-import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 export const App = () => {
@@ -18,9 +17,6 @@ export const App = () => {
 			logout()
 		}
 	}
-	useEffect(() => {
-		console.log(1)
-	}, [])
 	return (
 		<>
 			<AppBar position='static'>

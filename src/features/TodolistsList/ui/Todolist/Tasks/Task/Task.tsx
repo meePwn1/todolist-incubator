@@ -4,17 +4,19 @@ import ListItem from '@mui/material/ListItem'
 import { EditableSpan } from 'common/components/EditableSpan/EditableSpan'
 import { TaskStatuses } from 'common/enums'
 import { useActions } from 'common/hooks/useActions'
-import { ITask } from 'common/types/ITask'
+import { ITask } from 'common/types'
 import { tasksThunks } from 'features/TodolistsList/model/tasksSlice'
 import { ChangeEvent, FC, memo, useCallback } from 'react'
 
-interface TodoItemProps {
+interface Props {
 	todoID: string
 	task: ITask
 }
 
-const TodoItem: FC<TodoItemProps> = memo(({ task, todoID }) => {
+export const Task: FC<Props> = memo(({ task, todoID }) => {
 	const { updateTaskThunk, removeTaskThunk } = useActions(tasksThunks)
+
+	const sx = { p: 0, minHeight: 0, gap: 1, '&.is-done span': { textDecoration: 'line-through' } }
 
 	const onClickHandler = useCallback(
 		() => removeTaskThunk({ todoID, taskID: task.id }),
@@ -44,7 +46,7 @@ const TodoItem: FC<TodoItemProps> = memo(({ task, todoID }) => {
 		[task, todoID, updateTaskThunk]
 	)
 	return (
-		<ListItem className={task.status === TaskStatuses.Completed ? 'is-done' : ''} sx={{ p: 0, minHeight: 0, gap: 1 }}>
+		<ListItem className={task.status === TaskStatuses.Completed ? 'is-done' : ''} sx={sx}>
 			<Checkbox onChange={onChangeHandler} checked={task.status === TaskStatuses.Completed} sx={{ p: 0 }} />
 			<EditableSpan value={task.title!} onChange={onTitleChangeHandler} />
 			<Button onClick={onClickHandler} variant='contained' size='small' sx={{ minWidth: '25px', maxHeight: '25px' }}>
@@ -53,5 +55,3 @@ const TodoItem: FC<TodoItemProps> = memo(({ task, todoID }) => {
 		</ListItem>
 	)
 })
-
-export default TodoItem
